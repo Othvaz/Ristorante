@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ristorante</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .text-outline {
+            -webkit-text-stroke: 1px rgba(15, 23, 42, 0.55);
+        }
+        .ce-placeholder:empty:before{
+            content: attr(data-placeholder);
+            color: #F08787;
+            pointer-events: none;
+            display: block;
+            white-space: pre-wrap;
+        }
+        .ce-placeholder:focus:before{
+            content:"";
+            display: none;
+        }
+        .ce-placeholder{
+            border: 0 none;
+            outline: none;
+        }
+        .ce-placeholder:focus{
+            border: 0 none;
+            outline: none;
+        }
+        #allrecipes { scrollbar-width: thin; }
+        #allrecipes::-webkit-scrollbar { width: 8px; }
+        #allrecipes::-webkit-scrollbar-thumb {
+            background: rgba(240,135,135,0.7);
+            border-radius: 9999px;
+        }
+        #allrecipes::-webkit-scrollbar-track {
+            background: rgba(255,199,167,0.45);
+        }
+        .recipe-highlight {
+            --tw-ring-color: rgb(96 165 250 / var(--tw-ring-opacity, 1));
+            --tw-ring-offset-width: 0px;
+            box-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+        }
+
+        #recipeSearch:empty:before {
+            color:#F08787;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="grid grid-cols-[250px_1fr]">
+        <div class="flex flex-col min-h-screen items-center justify-center bg-gray-100">
+            <div class="w-[100%] h-[72%] rounded-tr-lg rounded-br-lg text-center p-5 flex flex-col pt-[5%] overflow-hidden bg-gray-100">
+                <span class="font-normal text-2xl" style="color:#F08787;">Select to Enable</span>
+                <div id="buttonsHolder" class="mt-10 flex flex-col items-center gap-5">
+                    <button id="toggleRecipesBtn" type="button" class="w-[85%] px-4 py-4 text-base hover:text-lg transition-all duration-75" style="color:#F8FAB4; background: linear-gradient(to right, transparent 0%, #F08787 40%, #F08787 60%, transparent 100%);">Browse Recipes</button>
+                    <button id="toggleChatbotBtn" type="button" class="w-[85%] px-4 py-4 text-base hover:text-lg transition-all duration-75" style="color:#F8FAB4; background: linear-gradient(to right, transparent 0%, #F08787 40%, #F08787 60%, transparent 100%);">Talk to a Chatbot</button>
+                    <button id="toggleCalculatorBtn" type="button" class="w-[85%] px-4 py-4 text-base hover:text-lg transition-all duration-75" style="color:#F8FAB4; background: linear-gradient(to right, transparent 0%, #F08787 40%, #F08787 60%, transparent 100%);">Servings Calculator</button>
+                </div>
+            </div> 
+        </div>
+        <div class="flex flex-col">
+            <div class="bg-gray-100 min-h-[60%] grid grid-cols-[230px_20%_0%_40%] justify-center grid-rows-[auto_1fr]" style="box-shadow: inset 10px 0 7px -6px rgba(0,0,0,0.18);">
+                <div class="col-start-1 col-end-2 px-4 pt-3 text-xs text-center font-semibold uppercase tracking-wide text-slate-700/80">Recipe</div>
+                <div class="col-start-2 col-end-3 px-3 pt-3 text-xs text-center font-semibold uppercase tracking-wide text-slate-700/80">Ingredients</div>
+                <div class="col-start-4 col-end-5 px-3 pt-3 text-xs font-semibold uppercase tracking-wide text-slate-700/80">Instructions</div>
+                
+                <div id="allrecipes" class="row-start-2 col-start-1 col-end-2"></div>
+                <div id="ingredients" class="row-start-2 col-start-2 col-end-3 whitespace-pre-wrap"></div>
+                <div id="units"       class="row-start-2 col-start-3 col-end-4 whitespace-pre-wrap"></div>
+                <div id="recipeId"    class="row-start-2 col-start-4 col-end-5 whitespace-pre-wrap px-3"></div>
+                
+                
+            </div>
+            <div class="min-h-[40%]" style="box-shadow: inset 10px 0 7px -6px rgba(0,0,0,0.18);">
+                <div class="h-full flex justify-start items-center px-12 bg-gray-200" style="box-shadow: inset 10px 0 7px -6px rgba(0,0,0,0.18);">
+                    <div class="w-full">
+                        <div class="flex w-[50%] gap-2">
+                            <div class="mb-4 w-[40%]">
+                                <label class="sr-only" for="recipeSearch">Search recipes</label>
+                                <input id="recipeSearch" type="search" placeholder="Search recipes..." class="w-full rounded-lg border placeholder:text-[#F08787] placeholder:font-light font-sans border-red-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm focus:outline-none" autocomplete="off"/>
+                            </div>
+                            <div class="mb-4 w-[40%] hidden">
+                                <label class="sr-only" for="recipeSearch">Search recipes</label>
+                                <input id="recipeSearch" type="search" placeholder="Search recipes..." class="w-full rounded-lg border border-red-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off"/>
+                            </div>
+                        </div>
+                        <section id="chatbotBox" class="flex flex-col items-center gap-4 border-transparent border p-6 bg-gray-100  w-[50%]">
+                            <p id="chatbotResponse" class="text-center text-white text-base font-sans font-normal" style="color:#F08787">
+                                Ask me anything (related to the recipes stored in my database)!
+                            </p>
+                            <div class="flex w-full flex-col ">
+                                <div id="upperBound" class="h-2 min-w-full rounded-t-3xl bg-white text-transparent border-red-200 border-t border-r border-l">a</div>
+                                
+                                <div id="userInput" 
+                                    class="ce-placeholder max-h-[10vh] max-w-full w-full cursor-text overflow-y-auto whitespace-normal break-words rounded-t-none px-4 pb-4 pt-3 text-base font-light font-sans text-black bg-white border-l-[1.5px] border-r-[1.5px] border-red-200 border-solid" 
+                                    contenteditable="true" 
+                                    style="-webkit-overflow-scrolling: touch; border-left: 1.5px solid oklch(88.5% 0.062 18.334); border-right: 1.5px solid oklch(88.5% 0.062 18.334);" 
+                                    data-placeholder="Book or ask a question"></div>
+                                
+                                <div class="flex justify-end gap-4 rounded-b-xl bg-white border-red-200 border-l border-r border-b px-4 pb-[10px] pt-4 transition-colors duration-300">
+                                    <button id="runBtn" 
+                                        type="button" 
+                                        class="rounded-md px-5 py-2 text-sm transition-all duration-300 ease-in-out"
+                                        style="background-color: #F08787; color: #F8FAB4; transition: background-color 0.1s cubic-bezier(0.4,0,0.2,1), color 0.3s cubic-bezier(0.4,0,0.2,1);"
+                                        onmouseover="this.style.backgroundColor='#F8FAB4'; this.style.color='#F08787';"
+                                        onmouseout="this.style.backgroundColor='#F08787'; this.style.color='#F8FAB4';"
+                                    >Send Message</button>
+                                </div>
+                                <div id="latency" class="mt-2 text-right text-xs font-medium" style="color:#F08787;"></div>
+
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let highlightedRecipeButton = null;
+        let requestTimer = { start: null, intervalId: null };
+        let recipesCache = [];
+
+
+        async function postJSON(url, payload) {
+            const resp = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type':'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (!resp.ok) throw new Error(`${url} -> ${resp.status}`);
+            return resp.json();
+        }
+
+        async function getQuantitiesFor(recipeName){
+            return postJSON('/api/getQuantitiesForRecipe', { recipeName });
+        }
+
+        async function getInstructionsFor(recipeName){
+            return postJSON('/api/getInstructionsForRecipe', { recipeName });
+        }
+
+        function filterRecipesByQuery(query) {
+            const normalized = (query || '').trim().toLowerCase();
+            if (!normalized) {
+                return [...recipesCache];
+            }
+
+            return recipesCache.filter((recipe) => {
+                const name = (recipe?.recipe_name || '').trim().toLowerCase();
+                return name.includes(normalized);
+            });
+        }
+
+        function renderRecipeButtons(recipes, { queryActive = false } = {}) {
+            const container = document.getElementById('allrecipes');
+            if (!container) return;
+
+            const activeName = highlightedRecipeButton?.dataset?.recipeName
+                ? highlightedRecipeButton.dataset.recipeName.trim().toLowerCase()
+                : null;
+
+            container.className = 'flex flex-col gap-3 px-4 py-3 overflow-y-auto overflow-x-hidden max-h-[55vh]';
+            container.setAttribute('role', 'list');
+            container.innerHTML = '';
+
+            if (!recipes || recipes.length === 0) {
+                const message = queryActive
+                    ? 'No recipes match your search.'
+                    : 'No recipes available.';
+                container.innerHTML = `<em class="text-sm text-slate-600">${message}</em>`;
+                if (activeName) {
+                    setHighlightedRecipeButton(null);
+                }
+                return;
+            }
+
+            let nextHighlight = null;
+
+            recipes.forEach((recipe) => {
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.className =
+                    'w-[100%] text-left rounded-lg border border-yellow-100 bg-white/70 hover:bg-white ' +
+                    'px-4 py-3 pl-4 text-sm font-medium text-slate-700 hover:text-slate-900 ' +
+                    'shadow-sm hover:shadow transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 ' +
+                    'overflow-x-auto break-words max-h-[5.2em] whitespace-normal ' +
+                    '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
+
+                const recipeName = recipe?.recipe_name ?? '';
+                card.textContent = recipeName;
+                card.dataset.recipeName = recipeName;
+                card.setAttribute('role', 'listitem');
+
+                card.addEventListener('click', () => handleRecipeClick(card, recipeName));
+
+                const normalizedName = recipeName.trim().toLowerCase();
+                if (activeName && normalizedName === activeName) {
+                    nextHighlight = card;
+                }
+
+                container.appendChild(card);
+            });
+
+            if (nextHighlight) {
+                setHighlightedRecipeButton(nextHighlight);
+            } else if (activeName) {
+                setHighlightedRecipeButton(null);
+            }
+        }
+
+        function handleRecipeSearch(event) {
+            const query = event.target.value ?? '';
+            const filtered = filterRecipesByQuery(query);
+            const queryActive = query.trim().length > 0;
+            renderRecipeButtons(filtered, { queryActive });
+        }
+
+        function startLatencyTimer() {
+            const el = document.getElementById('latency');
+            if (!el) return;
+            requestTimer.start = performance.now();
+            if (requestTimer.intervalId) clearInterval(requestTimer.intervalId);
+            el.textContent = 'Waiting... 0.00s';
+            requestTimer.intervalId = setInterval(() => {
+                const ms = performance.now() - requestTimer.start;
+                el.textContent = `Waiting... ${(ms / 1000).toFixed(2)}s`;
+            }, 50);
+        }
+
+        function stopLatencyTimer(label = 'Response time:') {
+            const el = document.getElementById('latency');
+            if (!el) return;
+            if (requestTimer.intervalId) {
+                clearInterval(requestTimer.intervalId);
+                requestTimer.intervalId = null;
+            }
+            if (requestTimer.start !== null) {
+                const ms = performance.now() - requestTimer.start;
+                el.textContent = `${label} ${(ms / 1000).toFixed(2)}s`;
+                requestTimer.start = null;
+            }
+        }
+
+        function setHighlightedRecipeButton(button) {
+            if (highlightedRecipeButton) {
+                highlightedRecipeButton.classList.remove('recipe-highlight');
+            }
+
+            highlightedRecipeButton = button || null;
+
+            if (button) {
+                button.classList.add('recipe-highlight');
+                // try {
+                //     button.focus({ preventScroll: true });
+                // } catch {
+                //     button.focus();
+                // }
+            }
+        }
+
+        function focusRecipeButtonByName(recipeName) {
+        if (!recipeName) return;
+
+        const normalizedTarget = recipeName.trim().toLowerCase();
+        if (!normalizedTarget) return;
+
+        const buttons = document.querySelectorAll('#allrecipes button[data-recipe-name]');
+        const matchingButton = Array.from(buttons).find(button => {
+            const label = (button.dataset.recipeName || '').trim().toLowerCase();
+            return label === normalizedTarget;
+        });
+
+        if (matchingButton) {
+            try {
+                matchingButton.click();
+            } catch {
+                handleRecipeClick(matchingButton, matchingButton.dataset.recipeName);
+            }
+            try {
+                matchingButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } catch {
+                matchingButton.scrollIntoView();
+            }
+        }
+    }
+
+
+        function extractRecipeNameFromResponse(text) {
+            if (!text) {
+                return null;
+            }
+
+            const match = text.match(/\/\/\s*([^/]+?)\s*\/\//);
+            return match ? match[1].trim() : null;
+        }
+
+        let recipesVisible = true;
+        let chatbotVisible = true;
+        const recipeSectionIds = ['allrecipes', 'ingredients', 'units', 'recipeId'];
+
+        function setRecipeSectionsVisibility(isVisible) {
+            recipeSectionIds.forEach((id) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.style.display = isVisible ? '' : 'none';
+                }
+            });
+
+            document.querySelectorAll('#recipeSearch').forEach((field) => {
+                const wrapper = field.closest('.mb-4');
+                const target = wrapper || field;
+                if (target) {
+                    target.style.display = isVisible ? '' : 'none';
+                }
+            });
+        }
+
+        function setChatbotVisibility(isVisible) {
+            const chatbot = document.getElementById('chatbotBox');
+            if (chatbot) {
+                chatbot.style.display = isVisible ? '' : 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchRecipes();
+            const runBtn = document.getElementById('runBtn');
+            const userInput = document.getElementById('userInput');
+            const chatbotResponse = document.getElementById('chatbotResponse');
+            const searchInput = document.getElementById('recipeSearch');
+            if (runBtn) {
+                runBtn.addEventListener('click', handleUserRequest);
+            }
+            if (searchInput) {
+                searchInput.addEventListener('input', handleRecipeSearch);
+            }
+
+            const toggleRecipesBtn = document.getElementById('toggleRecipesBtn');
+            if (toggleRecipesBtn) {
+                toggleRecipesBtn.addEventListener('click', () => {
+                    recipesVisible = !recipesVisible;
+                    setRecipeSectionsVisibility(recipesVisible);
+                });
+            }
+
+            const toggleChatbotBtn = document.getElementById('toggleChatbotBtn');
+            if (toggleChatbotBtn) {
+                toggleChatbotBtn.addEventListener('click', () => {
+                    chatbotVisible = !chatbotVisible;
+                    setChatbotVisibility(chatbotVisible);
+                });
+            }
+        });
+
+        async function getIngredientsFor(recipeName){
+            const params = new URLSearchParams({
+                recipeName: recipeName
+            });
+            const response = await fetch(`/api/getIngredientFromRecipe?${params.toString()}`);
+            if (!response.ok) {
+                throw new Error(`We got an error!!! ${response.status}`);
+            }
+            const ingredients = await response.json();
+            console.log(ingredients);
+            return ingredients;
+        }
+
+        function renderIngredientButtons(container, rows) {
+            container.className = 'flex flex-col gap-2 px-3 py-2 overflow-y-auto overflow-x-hidden max-h-[55vh]';
+            container.setAttribute('role', 'list');
+
+            const html = rows.map((r, idx) => {
+                const name = (r?.ingredient_name ?? '').trim();
+                const qty  = ((r?.quantity ?? '') + '').trim();
+                const unit = (r?.unit_name ?? '').trim();
+                const right = [qty, unit].filter(Boolean).join(' ');
+
+                return `
+                <button
+                    type="button"
+                    class="w-full flex items-center justify-between rounded-lg border border-yellow-100 bg-white/70 hover:bg-white
+                        px-3 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 shadow-sm hover:shadow transition
+                        focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    role="listitem"
+                    data-ingredient="${name}"
+                    data-qty="${qty}"
+                    data-unit="${unit}"
+                    aria-label="${name}${right ? `, ${right}` : ''}"
+                >
+                    <span class="truncate">${name || 'Unnamed ingredient'}</span>
+                    <span class="ml-3 shrink-0 tabular-nums">${right}</span>
+                </button>
+                `;
+            }).join('');
+
+            container.innerHTML = html || '<em class="text-sm text-slate-600">No ingredients found.</em>';
+            }
+
+        async function handleRecipeClick(card, recipeName, { ingredientsContainerId = 'ingredients' } = {}) {
+            setHighlightedRecipeButton(card);
+
+            const ingredientsContainer = document.getElementById(ingredientsContainerId);
+            const unitsContainer = document.getElementById('units');
+            const recipeIdContainer = document.getElementById('recipeId');
+
+            if (!ingredientsContainer || !unitsContainer || !recipeIdContainer || !recipeName) return;
+
+            ingredientsContainer.textContent = 'Loading ingredients...';
+            unitsContainer.textContent = 'Loading quantities...';
+            recipeIdContainer.textContent = 'Loading recipe id...';
+
+            try {
+                const [rows, meta] = await Promise.all([
+                    getQuantitiesFor(recipeName),
+                    getInstructionsFor(recipeName)
+                ]);
+
+                if (Array.isArray(rows) && rows.length > 0) {
+                    renderIngredientButtons(ingredientsContainer, rows);
+                } else {
+                    ingredientsContainer.innerHTML = '<em class="text-sm text-slate-600">No ingredients found.</em>';
+                }
+                unitsContainer.textContent = '';
+                recipeIdContainer.textContent =
+                    (meta?.instructions && meta.instructions.trim())
+                    ? meta.instructions
+                    : 'No instructions available.';
+
+            } catch (err) {
+                console.error('Could not fetch recipe details:', err);
+                ingredientsContainer.textContent = `Failed to load ingredients for ${recipeName}.`;
+                unitsContainer.textContent = 'Failed to load quantities.';
+                recipeIdContainer.textContent = 'Failed to load recipe id.';
+            }
+        }
+
+        async function fetchRecipes() {
+            try {
+                const response = await fetch('/api/getAllRecipes');
+                if (!response.ok) {
+                    throw new Error(`We got an erorr!! ${response.status}`);
+                }
+
+                const recipes = await response.json();
+                recipesCache = Array.isArray(recipes) ? recipes : [];
+
+                const searchInput = document.getElementById('recipeSearch');
+                const query = searchInput ? searchInput.value : '';
+                const filtered = filterRecipesByQuery(query);
+                const queryActive = query.trim().length > 0;
+
+                renderRecipeButtons(filtered, { queryActive });
+            } catch (error) {
+                console.error('Could not fetch recipes:', error);
+                const container = document.getElementById('allrecipes');
+                if (container) {
+                    container.className = 'flex flex-col gap-3 px-4 py-3 overflow-y-auto overflow-x-hidden max-h-[55vh]';
+                    container.setAttribute('role', 'list');
+                    container.innerHTML = '<em class="text-sm text-slate-600">Failed to load recipes.</em>';
+                    container.addEventListener(
+                        'wheel',
+                        (e) => { e.stopImmediatePropagation(); },
+                        { capture: true, passive: true }
+                    );
+                }
+                setHighlightedRecipeButton(null);
+                recipesCache = [];
+            }
+        }
+        
+        async function handleUserRequest() {
+        const userInput = document.getElementById('userInput');
+        const chatbotResponse = document.getElementById('chatbotResponse');
+        const userMessage = userInput.textContent.trim();
+
+        if (!userMessage) return;
+
+        chatbotResponse.textContent = 'Please wait, querying the database...';
+        userInput.textContent = '';
+        startLatencyTimer();
+
+        try {
+            const initialResponse = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMessage }),
+            });
+
+            if (!initialResponse.ok) {
+                throw new Error(`Server error during parsing: ${initialResponse.status}`);
+            }
+
+            const data = await initialResponse.json();
+            const searchParams = data.searchParams;
+
+            // if (searchParams.recipeName === 'NONE' && searchParams.ingredientName === 'NONE') {
+            //     chatbotResponse.textContent = "I can only help with recipe-related questions. Please ask me about a recipe or an ingredient.";
+            //     stopLatencyTimer('Cancelled:');
+            //     return;
+            // }
+
+            const finalResponse = await fetch('/api/get-recipe-details', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ searchParams: searchParams }),
+            });
+
+            if (!finalResponse.ok) {
+                throw new Error(`Server error during detail fetch: ${finalResponse.status}`);
+            }
+
+            const finalData = await finalResponse.json();
+            const finalReplyText = finalData.reply;
+            const suppressHeaderAndHighlight =
+            (searchParams?.recipeName === 'NONE' && searchParams?.ingredientName === 'NONE');
+
+            if (suppressHeaderAndHighlight) {
+            setHighlightedRecipeButton(null);
+            }
+
+            const recipeName = !suppressHeaderAndHighlight
+            ? extractRecipeNameFromResponse(finalReplyText)
+            : null;
+
+            if (recipeName) {
+            focusRecipeButtonByName(recipeName);
+            chatbotResponse.innerHTML = finalReplyText
+                .replace(/\/\/(.*?)\/\/\n*/, `<h3>${recipeName}</h3>`)
+                .trim();
+            } 
+
+            else {
+            chatbotResponse.textContent = finalReplyText
+                .replace(/^\s*\/\/.*?\/\/\s*\n?/, '')
+                .trim();
+            }
+            stopLatencyTimer('Response time:');
+
+        } catch (error) {
+            console.error('Failed to get chatbot response:', error);
+            chatbotResponse.textContent = `Sorry, I ran into an error. Please try again. Error: ${error.message}`;
+            stopLatencyTimer('Failed after');
+        }
+    }
+        
+    </script>
+</body>
+</html>
