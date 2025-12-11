@@ -54,18 +54,18 @@
 </head>
 <body>
     <div class="grid grid-cols-[250px_1fr]">
-        <div class="flex flex-col min-h-screen items-center justify-center bg-gray-100">
-            <div class="w-[100%] h-[72%] rounded-tr-lg rounded-br-lg text-center p-5 flex flex-col pt-[5%] overflow-hidden bg-gray-100">
-                <span class="font-normal text-2xl" style="color:#F08787;">Select to Enable</span>
-                <div id="buttonsHolder" class="mt-10 flex flex-col items-center gap-5">
-                    <button id="toggleRecipesBtn" type="button" class="w-[85%] px-4 py-4 text-base hover:text-lg transition-all duration-75" style="color:#F8FAB4; background: linear-gradient(to right, transparent 0%, #F08787 40%, #F08787 60%, transparent 100%);">Browse Recipes</button>
-                    <button id="toggleChatbotBtn" type="button" class="w-[85%] px-4 py-4 text-base hover:text-lg transition-all duration-75" style="color:#F8FAB4; background: linear-gradient(to right, transparent 0%, #F08787 40%, #F08787 60%, transparent 100%);">Talk to a Chatbot</button>
-                    <button id="toggleCalculatorBtn" type="button" class="w-[85%] px-4 py-4 text-base hover:text-lg transition-all duration-75" style="color:#F8FAB4; background: linear-gradient(to right, transparent 0%, #F08787 40%, #F08787 60%, transparent 100%);">Servings Calculator</button>
+        <div class="flex flex-col min-h-screen items-center justify-start pt-12" style="background-color: #F08787;">
+            <div class="w-[100%] h-[72%] rounded-tr-lg rounded-br-lg text-center p-5 flex flex-col pt-[5%] overflow-hidden" style="background-color: #F08787;">
+                <span class="font-normal text-2xl text-white">Select to Enable</span>
+                <div id="buttonsHolder" class="mt-10 flex flex-col items-center gap-2">
+                    <button id="toggleRecipesBtn" type="button" class="w-[85%] px-1 py-4 text-base text-left hover:text-lg transition-all duration-75" style="color:#F8FAB4; background: linear-gradient(to right, transparent 0%, #F08787 40%, #F08787 60%, transparent 100%);">Browse Recipes</button>
+                    <button id="toggleChatbotBtn" type="button" class="w-[85%] px-1 py-4 text-base text-left hover:text-lg transition-all duration-75" style="color:#F8FAB4; background: linear-gradient(to right, transparent 0%, #F08787 40%, #F08787 60%, transparent 100%);">Talk to a Chatbot</button>
+                    <button id="toggleCalculatorBtn" type="button" class="w-[85%] px-1 py-4 text-base text-left hover:text-lg transition-all duration-75" style="color:#F8FAB4; background: linear-gradient(to right, transparent 0%, #F08787 40%, #F08787 60%, transparent 100%);">Servings Calculator</button>
                 </div>
             </div> 
         </div>
         <div class="flex flex-col">
-            <div class="bg-gray-100 min-h-[60%] grid grid-cols-[230px_20%_0%_40%] justify-center grid-rows-[auto_1fr]" style="box-shadow: inset 10px 0 7px -6px rgba(0,0,0,0.18);">
+            <div class="bg-gray-100 min-h-[60%] grid grid-cols-[20%_20%_0%_50%] justify-center grid-rows-[auto_1fr]" style="box-shadow: inset 10px 0 7px -6px rgba(0,0,0,0.18);">
                 <div class="col-start-1 col-end-2 px-4 pt-3 text-xs text-center font-semibold uppercase tracking-wide text-slate-700/80">Recipe</div>
                 <div class="col-start-2 col-end-3 px-3 pt-3 text-xs text-center font-semibold uppercase tracking-wide text-slate-700/80">Ingredients</div>
                 <div class="col-start-4 col-end-5 px-3 pt-3 text-xs font-semibold uppercase tracking-wide text-slate-700/80">Instructions</div>
@@ -73,49 +73,85 @@
                 <div id="allrecipes" class="row-start-2 col-start-1 col-end-2"></div>
                 <div id="ingredients" class="row-start-2 col-start-2 col-end-3 whitespace-pre-wrap"></div>
                 <div id="units"       class="row-start-2 col-start-3 col-end-4 whitespace-pre-wrap"></div>
-                <div id="recipeId"    class="row-start-2 col-start-4 col-end-5 whitespace-pre-wrap px-3"></div>
-                
+                <div id="recipeId"class="row-start-2 col-start-4 col-end-5 px-3 py-2 flex flex-col gap-3 h-full">
+                    <!-- Instructions-->
+                    <div class="flex-1 min-h-0 flex flex-col">
+                        <div
+                            id="recipeInstructions"
+                            class="flex-1 min-h-0 overflow-y-auto whitespace-pre-wrap text-sm text-slate-800 bg-white/60 rounded-md px-3 py-2 shadow-inner border border-slate-200">Select a recipe to view instructions.</div>
+                    </div>
+
+                    <!-- Comments-->
+                    <div class="flex-1 min-h-0 flex flex-col border-t border-slate-200/70 pt-2">
+                        <div class="text-xs font-semibold uppercase tracking-wide text-slate-700/80 mb-1">Comments</div>
+                        <div
+                            id="recipeComments"
+                            class="flex-1 min-h-0 overflow-y-auto whitespace-pre-wrap text-sm text-slate-800 bg-white/60 rounded-md px-3 py-2 shadow-inner border border-slate-200">No comments yet.</div>
+                    </div>
+                </div>
                 
             </div>
             <div class="min-h-[40%]" style="box-shadow: inset 10px 0 7px -6px rgba(0,0,0,0.18);">
-                <div class="h-full flex justify-start items-center px-12 bg-gray-200" style="box-shadow: inset 10px 0 7px -6px rgba(0,0,0,0.18);">
-                    <div class="w-full">
-                        <div class="flex w-[50%] gap-2">
-                            <div class="mb-4 w-[40%]">
+                <div class="h-full grid grid-cols-[20%_20%_0%_50%] justify-center items-center bg-gray-200" style="box-shadow: inset 10px 0 7px -6px rgba(0,0,0,0.18);">
+                    
+                    <div class="col-start-1 col-end-3 flex flex-col h-[70%] justify-center px-4">
+                        <div class="flex gap-2 mb-4 w-full">
+                            <div class="w-[40%]">
                                 <label class="sr-only" for="recipeSearch">Search recipes</label>
-                                <input id="recipeSearch" type="search" placeholder="Search recipes..." class="w-full rounded-lg border placeholder:text-[#F08787] placeholder:font-light font-sans border-red-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm focus:outline-none" autocomplete="off"/>
+                                <input id="recipeSearch" type="search" placeholder="Search recipes..." class="w-full rounded-lg border placeholder:text-[#F08787] placeholder:font-light font-sans border-slate-300 focus:border-red-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm focus:outline-none" autocomplete="off"/>
                             </div>
-                            <div class="mb-4 w-[40%] hidden">
-                                <label class="sr-only" for="recipeSearch">Search recipes</label>
-                                <input id="recipeSearch" type="search" placeholder="Search recipes..." class="w-full rounded-lg border border-red-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off"/>
+                            <div class="w-[40%]">
+                                <label class="sr-only" for="ingredientFilter">Filter by ingredients</label>
+                                <input id="ingredientFilter" type="search" placeholder="Filter (e.g. cheddar,milk)" class="w-full rounded-lg border placeholder:text-[#F08787] placeholder:font-light font-sans border-slate-300 focus:border-red-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm focus:outline-none" autocomplete="off"/>
                             </div>
                         </div>
-                        <section id="chatbotBox" class="flex flex-col items-center gap-4 border-transparent border p-6 bg-gray-100  w-[50%]">
-                            <p id="chatbotResponse" class="text-center text-white text-base font-sans font-normal" style="color:#F08787">
+
+                        <section id="chatbotBox" class="flex flex-col items-center gap-4 border-white/50 border p-6 bg-gray-100 shadow-inner w-full h-full justify-center">
+                            <p id="chatbotResponse" class="text-center text-slate-600 text-base font-semibold border-b pb-2">
                                 Ask me anything (related to the recipes stored in my database)!
                             </p>
-                            <div class="flex w-full flex-col ">
+                            <div class="flex w-full flex-col">
                                 <div id="upperBound" class="h-2 min-w-full rounded-t-3xl bg-white text-transparent border-red-200 border-t border-r border-l">a</div>
-                                
                                 <div id="userInput" 
                                     class="ce-placeholder max-h-[10vh] max-w-full w-full cursor-text overflow-y-auto whitespace-normal break-words rounded-t-none px-4 pb-4 pt-3 text-base font-light font-sans text-black bg-white border-l-[1.5px] border-r-[1.5px] border-red-200 border-solid" 
                                     contenteditable="true" 
                                     style="-webkit-overflow-scrolling: touch; border-left: 1.5px solid oklch(88.5% 0.062 18.334); border-right: 1.5px solid oklch(88.5% 0.062 18.334);" 
-                                    data-placeholder="Book or ask a question"></div>
-                                
+                                    data-placeholder="Ask a question regarding the database"></div>
                                 <div class="flex justify-end gap-4 rounded-b-xl bg-white border-red-200 border-l border-r border-b px-4 pb-[10px] pt-4 transition-colors duration-300">
-                                    <button id="runBtn" 
-                                        type="button" 
-                                        class="rounded-md px-5 py-2 text-sm transition-all duration-300 ease-in-out"
-                                        style="background-color: #F08787; color: #F8FAB4; transition: background-color 0.1s cubic-bezier(0.4,0,0.2,1), color 0.3s cubic-bezier(0.4,0,0.2,1);"
-                                        onmouseover="this.style.backgroundColor='#F8FAB4'; this.style.color='#F08787';"
-                                        onmouseout="this.style.backgroundColor='#F08787'; this.style.color='#F8FAB4';"
-                                    >Send Message</button>
+                                    <button id="runBtn" type="button" class="rounded-md px-5 py-2 text-sm transition-all duration-300 ease-in-out" style="background-color: #F08787; color: #F8FAB4;">Send Message</button>
                                 </div>
                                 <div id="latency" class="mt-2 text-right text-xs font-medium" style="color:#F08787;"></div>
-
                             </div>
                         </section>
+                    </div>
+                
+                    <div id="calculatorBox" class="hidden flex-col col-start-4 col-end-5 mx-3 h-[90%] bg-gray-100 shadow-inner border border-white/50 p-4">
+                        <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
+                            <h3 class="text-slate-600 font-semibold text-lg">Servings Calculator</h3>
+                            <button id="importIngredientsBtn" class="text-xs bg-[#F08787] text-[#F8FAB4] px-3 py-1.5 rounded hover:opacity-90 transition">
+                                Import from Selected
+                            </button>
+                        </div>
+                        
+                        <div class="flex gap-4 mb-3">
+                            <div class="w-1/2">
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Original Servings</label>
+                                <input id="calcOriginalServings" type="number" min="1" value="1" class="w-full rounded border border-slate-300 px-2 py-1 text-sm text-slate-700 focus:border-[#F08787] focus:outline-none">
+                            </div>
+                            <div class="w-1/2">
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Desired Servings</label>
+                                <input id="calcDesiredServings" type="number" min="1" value="2" class="w-full rounded border border-slate-300 px-2 py-1 text-sm text-slate-700 focus:border-[#F08787] focus:outline-none">
+                            </div>
+                        </div>
+                
+                        <div class="grid grid-cols-[1fr_80px_80px] gap-2 px-2 py-1 bg-slate-100/50 rounded-t text-xs font-bold text-slate-500 uppercase">
+                            <div>Ingredients</div>
+                            <div class="text-right">Orig</div>
+                            <div class="text-right">New</div>
+                        </div>
+                        
+                        <div id="calculatorList" class="flex-1 overflow-y-auto space-y-1 p-1">
+                            </div>
                     </div>
                 </div>
             </div>
@@ -127,6 +163,11 @@
         let requestTimer = { start: null, intervalId: null };
         let recipesCache = [];
 
+        let recipeIngredientsIndex = new Map();
+        let currentNameQuery = '';
+        let currentIngredientFilter = '';
+        let calculatorVisible = false;
+        let currentCalcIngredients = [];
 
         async function postJSON(url, payload) {
             const resp = await fetch(url, {
@@ -145,20 +186,59 @@
         async function getInstructionsFor(recipeName){
             return postJSON('/api/getInstructionsForRecipe', { recipeName });
         }
+        
+        async function getCommentsFor(recipeName) {
+            return postJSON('/api/getCommentsForRecipe', { recipeName });
+        }
 
-        function filterRecipesByQuery(query) {
-            const normalized = (query || '').trim().toLowerCase();
-            if (!normalized) {
-                return [...recipesCache];
-            }
+
+        function filterRecipesByQuery() {
+            const normalizedName = (currentNameQuery || '').trim().toLowerCase();
+            const ingredientTokens = (currentIngredientFilter || '')
+                .split(',')
+                .map(t => t.trim().toLowerCase())
+                .filter(Boolean);
 
             return recipesCache.filter((recipe) => {
                 const name = (recipe?.recipe_name || '').trim().toLowerCase();
-                return name.includes(normalized);
+
+                if (normalizedName && !name.includes(normalizedName)) {
+                    return false;
+                }
+                if (ingredientTokens.length === 0) {
+                    return true;
+                }
+
+                const key = name;
+                const ingSet = recipeIngredientsIndex.get(key);
+                if (!ingSet || ingSet.size === 0) {
+                    return false;
+                }
+                for (const token of ingredientTokens) {
+                    let hasToken = false;
+                    for (const ing of ingSet) {
+                        if (ing.includes(token)) {
+                            hasToken = true;
+                            break;
+                        }
+                    }
+                    if (!hasToken) {
+                        return false;
+                    }
+                }
+                return true;
             });
         }
+        function updateRecipeList() {
+            const filtered = filterRecipesByQuery();
+            const queryActive =
+                (currentNameQuery || '').trim().length > 0 ||
+                (currentIngredientFilter || '').trim().length > 0;
 
-        function renderRecipeButtons(recipes, { queryActive = false } = {}) {
+            renderRecipeButtons(filtered, { queryActive });
+        }
+
+        function renderRecipeButtons(recipes, { queryActive = false, forceDisplay = false } = {}) {
             const container = document.getElementById('allrecipes');
             if (!container) return;
 
@@ -169,6 +249,14 @@
             container.className = 'flex flex-col gap-3 px-4 py-3 overflow-y-auto overflow-x-hidden max-h-[55vh]';
             container.setAttribute('role', 'list');
             container.innerHTML = '';
+
+            if (!forceDisplay && !queryActive) {
+                container.innerHTML = '<em class="text-sm text-slate-600">Use the search bar or the chatbot!</em>';
+                if (activeName) {
+                    setHighlightedRecipeButton(null);
+                }
+                return;
+            }
 
             if (!recipes || recipes.length === 0) {
                 const message = queryActive
@@ -182,12 +270,11 @@
             }
 
             let nextHighlight = null;
-
             recipes.forEach((recipe) => {
                 const card = document.createElement('button');
                 card.type = 'button';
                 card.className =
-                    'w-[100%] text-left rounded-lg border border-yellow-100 bg-white/70 hover:bg-white ' +
+                    'flex-shrink-0 w-[100%] text-left rounded-lg border border-white/50 bg-white/70 hover:bg-white ' +
                     'px-4 py-3 pl-4 text-sm font-medium text-slate-700 hover:text-slate-900 ' +
                     'shadow-sm hover:shadow transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 ' +
                     'overflow-x-auto break-words max-h-[5.2em] whitespace-normal ' +
@@ -216,11 +303,99 @@
         }
 
         function handleRecipeSearch(event) {
-            const query = event.target.value ?? '';
-            const filtered = filterRecipesByQuery(query);
-            const queryActive = query.trim().length > 0;
-            renderRecipeButtons(filtered, { queryActive });
+            currentNameQuery = event.target.value ?? '';
+            updateRecipeList();
         }
+        function handleIngredientFilter(event) {
+            currentIngredientFilter = event.target.value ?? '';
+            updateRecipeList();
+        }
+
+        function toggleCalculatorVisibility() {
+            calculatorVisible = !calculatorVisible;
+            const box = document.getElementById('calculatorBox');
+            if (box) {
+                if (calculatorVisible) {
+                    box.classList.remove('hidden');
+                    box.classList.add('flex');
+                } else {
+                    box.classList.add('hidden');
+                    box.classList.remove('flex');
+                }
+            }
+        }
+
+        async function importIngredientsToCalculator() {
+            if (!highlightedRecipeButton || !highlightedRecipeButton.dataset.recipeName) {
+                alert("Please select a recipe from the list above first.");
+                return;
+            }
+            
+            const recipeName = highlightedRecipeButton.dataset.recipeName;
+            const listContainer = document.getElementById('calculatorList');
+            listContainer.innerHTML = '<div class="text-center text-slate-500 text-sm py-4">Loading...</div>';
+
+            try {
+                const rows = await getQuantitiesFor(recipeName);
+                if (Array.isArray(rows)) {
+                    currentCalcIngredients = rows;
+                    recalculateServings(); // Initial calculation
+                } else {
+                    currentCalcIngredients = [];
+                    listContainer.innerHTML = '<em class="text-sm text-slate-600">No ingredients found.</em>';
+                }
+            } catch (e) {
+                console.error(e);
+                listContainer.textContent = "Error loading ingredients.";
+            }
+        }
+
+        function recalculateServings() {
+            const listContainer = document.getElementById('calculatorList');
+            const origServingsInput = document.getElementById('calcOriginalServings');
+            const desiredServingsInput = document.getElementById('calcDesiredServings');
+            
+            // Safety checks
+            const origServings = parseFloat(origServingsInput.value) || 1;
+            const desiredServings = parseFloat(desiredServingsInput.value) || 1;
+
+            if (!currentCalcIngredients || currentCalcIngredients.length === 0) return;
+
+            listContainer.innerHTML = '';
+
+            currentCalcIngredients.forEach(ing => {
+                const name = ing.ingredient_name;
+                const unit = ing.unit_name || '';
+                const originalQty = parseFloat(ing.quantity);
+
+                let newQtyDisplay = '-';
+                let origQtyDisplay = '-';
+
+                if (!isNaN(originalQty)) {
+                    // THE FORMULA: New = (Original / Actual) * Desired
+                    const newQty = (originalQty / origServings) * desiredServings;
+                    
+                    // Format to remove trailing zeros, max 2 decimals
+                    newQtyDisplay = parseFloat(newQty.toFixed(2));
+                    origQtyDisplay = parseFloat(originalQty.toFixed(2));
+                } else {
+                    // Handle cases like "to taste" where quantity might be null/string
+                    origQtyDisplay = ing.quantity || '';
+                    newQtyDisplay = ing.quantity || ''; 
+                }
+
+                const row = document.createElement('div');
+                row.className = "grid grid-cols-[1fr_80px_80px] gap-2 px-2 py-2 border-b border-slate-100 text-sm hover:bg-slate-50";
+                row.innerHTML = `
+                    <div class="truncate font-medium text-slate-700" title="${name}">${name}</div>
+                    <div class="text-right text-slate-500">${origQtyDisplay} <span class="text-xs">${unit}</span></div>
+                    <div class="text-right font-bold text-[#F08787]">${newQtyDisplay} <span class="text-xs">${unit}</span></div>
+                `;
+                listContainer.appendChild(row);
+            });
+        }
+
+        
 
         function startLatencyTimer() {
             const el = document.getElementById('latency');
@@ -266,43 +441,80 @@
         }
 
         function focusRecipeButtonByName(recipeName) {
-        if (!recipeName) return;
+            if (!recipeName) return;
+            const normalizedTarget = recipeName.trim().toLowerCase();
+            if (!normalizedTarget) return;
 
-        const normalizedTarget = recipeName.trim().toLowerCase();
-        if (!normalizedTarget) return;
+            const matchingRecipe = recipesCache.find((recipe) => {
+                const name = (recipe?.recipe_name || '').trim().toLowerCase();
+                return name === normalizedTarget;
+            });
 
-        const buttons = document.querySelectorAll('#allrecipes button[data-recipe-name]');
-        const matchingButton = Array.from(buttons).find(button => {
-            const label = (button.dataset.recipeName || '').trim().toLowerCase();
-            return label === normalizedTarget;
-        });
-
-        if (matchingButton) {
-            try {
-                matchingButton.click();
-            } catch {
-                handleRecipeClick(matchingButton, matchingButton.dataset.recipeName);
+            if (!matchingRecipe) {
+                return;
             }
-            try {
-                matchingButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } catch {
-                matchingButton.scrollIntoView();
+
+            renderRecipeButtons([matchingRecipe], { forceDisplay: true });
+
+            const buttons = document.querySelectorAll('#allrecipes button[data-recipe-name]');
+            const matchingButton = Array.from(buttons).find((button) => {
+                const label = (button.dataset.recipeName || '').trim().toLowerCase();
+                return label === normalizedTarget;
+            });
+
+            if (matchingButton) {
+                try {
+                    matchingButton.click();
+                } catch {
+                    handleRecipeClick(matchingButton, matchingButton.dataset.recipeName);
+                }
+                try {
+                    matchingButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } catch {
+                    matchingButton.scrollIntoView();
+                }
             }
         }
-    }
+        function showRecipeButtonsForNames(recipeNames){
+            if (!Array.isArray(recipeNames) || recipeNames.length === 0) return;
+            const normalizedTargets = new Set(
+                recipeNames.map(n=> (n || '').trim().toLowerCase()).filter(Boolean)
+            );
+            if (!normalizedTargets.size) return;
+            const matches = recipesCache.filter((recipe) => {
+                const name = (recipe.recipe_name || '').trim().toLowerCase();
+                return normalizedTargets.has(name);
+            });
 
+            if (!matches.length){
+                console.warn('No recipes from reply were foudn in recipesCacha:', recipeNames);
+                return;
+            }
+            renderRecipeButtons(matches, {queryActive: true, forceDisplay: true});
+            const first = matches[0];
+            const buttons = document.querySelectorAll('#allrecipes button[data-recipe-name]');
+            const firstBtn = Array.from(buttons).find((btn) =>
+                (btn.dataset.recipeName || '').trim().toLowerCase === 
+                (first.recipe_name || '').trim().toLowerCase()
+            );
+            if (firstBtn){
+                setHighlightedRecipeButton(firstBtn);
+            }
+            else{
+                setHighlightedRecipeButton(null);
+            }
+        }
 
         function extractRecipeNameFromResponse(text) {
             if (!text) {
                 return null;
             }
-
             const match = text.match(/\/\/\s*([^/]+?)\s*\/\//);
             return match ? match[1].trim() : null;
         }
 
-        let recipesVisible = true;
-        let chatbotVisible = true;
+        let recipesVisible = false;
+        let chatbotVisible = false;
         const recipeSectionIds = ['allrecipes', 'ingredients', 'units', 'recipeId'];
 
         function setRecipeSectionsVisibility(isVisible) {
@@ -323,23 +535,40 @@
         }
 
         function setChatbotVisibility(isVisible) {
-            const chatbot = document.getElementById('chatbotBox');
-            if (chatbot) {
-                chatbot.style.display = isVisible ? '' : 'none';
+            const chatbotBox = document.getElementById('chatbotBox');
+            if (chatbotBox) {
+                chatbotBox.style.display = '';
+            }
+
+            const chatbotResponse = document.getElementById('chatbotResponse');
+            if (chatbotResponse) {
+                chatbotResponse.style.display = isVisible ? '' : 'none';
             }
         }
 
+
         document.addEventListener('DOMContentLoaded', () => {
+            setRecipeSectionsVisibility(recipesVisible); 
+            setChatbotVisibility(chatbotVisible);
             fetchRecipes();
+            fetchRecipeIngredientsIndex();
+
             const runBtn = document.getElementById('runBtn');
             const userInput = document.getElementById('userInput');
+            const upperBound = document.getElementById('upperBound');
+            const bottomBar = userInput.nextElementSibling;
             const chatbotResponse = document.getElementById('chatbotResponse');
             const searchInput = document.getElementById('recipeSearch');
+            const ingredientFilterInput = document.getElementById('ingredientFilter');
+
             if (runBtn) {
                 runBtn.addEventListener('click', handleUserRequest);
             }
             if (searchInput) {
                 searchInput.addEventListener('input', handleRecipeSearch);
+            }
+            if (ingredientFilterInput) {
+                ingredientFilterInput.addEventListener('input', handleIngredientFilter);
             }
 
             const toggleRecipesBtn = document.getElementById('toggleRecipesBtn');
@@ -357,6 +586,46 @@
                     setChatbotVisibility(chatbotVisible);
                 });
             }
+            const toggleCalculatorBtn = document.getElementById('toggleCalculatorBtn');
+            if (toggleCalculatorBtn) {
+                toggleCalculatorBtn.addEventListener('click', () => {
+                    toggleCalculatorVisibility();
+                });
+            }
+
+            const importBtn = document.getElementById('importIngredientsBtn');
+            const origInput = document.getElementById('calcOriginalServings');
+            const desireInput = document.getElementById('calcDesiredServings');
+
+            if(importBtn) importBtn.addEventListener('click', importIngredientsToCalculator);
+            if(origInput) origInput.addEventListener('input', recalculateServings);
+            if(desireInput) desireInput.addEventListener('input', recalculateServings);
+
+            // here we're making a code for changing the ui border color
+            const borderElements = [userInput, upperBound, bottomBar];
+            const activeClass = 'border-red-200';
+            const inactiveClass = 'border-slate-300';
+            const activeColorInline = 'oklch(88.5% 0.062 18.334)';
+
+            const handleFocus = () => {
+                borderElements.forEach(el => {
+                    el.classList.remove(inactiveClass);
+                    el.classList.add(activeClass);
+                    el.style.borderColor = activeColorInline;
+                });
+            };
+            const handleBlur = () => {
+                borderElements.forEach(el => {
+                    el.classList.remove(activeClass);
+                    el.classList.add(inactiveClass);
+                    el.style.borderColor = ''; 
+                });
+            };
+
+            userInput.addEventListener('focus', handleFocus);
+            userInput.addEventListener('blur', handleBlur);
+            handleBlur();
+            //end of that
         });
 
         async function getIngredientsFor(recipeName){
@@ -385,7 +654,7 @@
                 return `
                 <button
                     type="button"
-                    class="w-full flex items-center justify-between rounded-lg border border-yellow-100 bg-white/70 hover:bg-white
+                    class="w-full flex items-center justify-between rounded-lg border border-white/50 bg-white/70 hover:bg-white
                         px-3 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 shadow-sm hover:shadow transition
                         focus:outline-none focus:ring-2 focus:ring-blue-300"
                     role="listitem"
@@ -408,18 +677,21 @@
 
             const ingredientsContainer = document.getElementById(ingredientsContainerId);
             const unitsContainer = document.getElementById('units');
-            const recipeIdContainer = document.getElementById('recipeId');
+            const instructionsEl = document.getElementById('recipeInstructions');
+            const commentsEl = document.getElementById('recipeComments');
 
-            if (!ingredientsContainer || !unitsContainer || !recipeIdContainer || !recipeName) return;
+            if (!ingredientsContainer || !unitsContainer || !instructionsEl || !commentsEl || !recipeName) return;
 
             ingredientsContainer.textContent = 'Loading ingredients...';
             unitsContainer.textContent = 'Loading quantities...';
-            recipeIdContainer.textContent = 'Loading recipe id...';
+            instructionsEl.textContent = 'Loading instructions...';
+            commentsEl.textContent = 'Loading comments...';
 
             try {
-                const [rows, meta] = await Promise.all([
+                const [rows, meta, commentsRow] = await Promise.all([
                     getQuantitiesFor(recipeName),
-                    getInstructionsFor(recipeName)
+                    getInstructionsFor(recipeName),
+                    getCommentsFor(recipeName)
                 ]);
 
                 if (Array.isArray(rows) && rows.length > 0) {
@@ -427,17 +699,27 @@
                 } else {
                     ingredientsContainer.innerHTML = '<em class="text-sm text-slate-600">No ingredients found.</em>';
                 }
+
                 unitsContainer.textContent = '';
-                recipeIdContainer.textContent =
-                    (meta?.instructions && meta.instructions.trim())
-                    ? meta.instructions
-                    : 'No instructions available.';
+
+                const instructionsText =
+                    meta?.instructions && meta.instructions.trim()
+                        ? meta.instructions
+                        : 'No instructions available.';
+                instructionsEl.textContent = instructionsText;
+
+                const commentsText =
+                    commentsRow?.comments && String(commentsRow.comments).trim()
+                        ? commentsRow.comments
+                        : 'No comments available.';
+                commentsEl.textContent = commentsText;
 
             } catch (err) {
                 console.error('Could not fetch recipe details:', err);
                 ingredientsContainer.textContent = `Failed to load ingredients for ${recipeName}.`;
                 unitsContainer.textContent = 'Failed to load quantities.';
-                recipeIdContainer.textContent = 'Failed to load recipe id.';
+                instructionsEl.textContent = 'Failed to load instructions.';
+                commentsEl.textContent = 'Failed to load comments.';
             }
         }
 
@@ -452,11 +734,17 @@
                 recipesCache = Array.isArray(recipes) ? recipes : [];
 
                 const searchInput = document.getElementById('recipeSearch');
-                const query = searchInput ? searchInput.value : '';
-                const filtered = filterRecipesByQuery(query);
-                const queryActive = query.trim().length > 0;
+                if (searchInput) {
+                    currentNameQuery = searchInput.value || '';
+                }
 
-                renderRecipeButtons(filtered, { queryActive });
+                const ingredientFilterInput = document.getElementById('ingredientFilter');
+                if (ingredientFilterInput) {
+                    currentIngredientFilter = ingredientFilterInput.value || '';
+                }
+
+                updateRecipeList();
+
             } catch (error) {
                 console.error('Could not fetch recipes:', error);
                 const container = document.getElementById('allrecipes');
@@ -474,81 +762,147 @@
                 recipesCache = [];
             }
         }
+        async function fetchRecipeIngredientsIndex() {
+            try {
+                const resp = await fetch('/api/getAllRecipeIngredients');
+                if (!resp.ok) {
+                    throw new Error(`We got an error!! ${resp.status}`);
+                }
+                const rows = await resp.json();
+
+                const map = new Map();
+
+                rows.forEach((row) => {
+                    const recipeName = (row.recipe_name || '').trim().toLowerCase();
+                    const ingredientName = (row.ingredient_name || '').trim().toLowerCase();
+
+                    if (!recipeName) return;
+
+                    if (!map.has(recipeName)) {
+                        map.set(recipeName, new Set());
+                    }
+                    if (ingredientName) {
+                        map.get(recipeName).add(ingredientName);
+                    }
+                });
+
+                recipeIngredientsIndex = map;
+            } catch (error) {
+                console.error('Could not fetch recipe ingredients index:', error);
+                recipeIngredientsIndex = new Map();
+            }
+        }
+        
         
         async function handleUserRequest() {
-        const userInput = document.getElementById('userInput');
-        const chatbotResponse = document.getElementById('chatbotResponse');
-        const userMessage = userInput.textContent.trim();
+            const userInput = document.getElementById('userInput');
+            const chatbotResponse = document.getElementById('chatbotResponse');
+            const userMessage = userInput.textContent.trim();
 
-        if (!userMessage) return;
+            if (!userMessage) return;
 
-        chatbotResponse.textContent = 'Please wait, querying the database...';
-        userInput.textContent = '';
-        startLatencyTimer();
+            chatbotResponse.textContent = 'Please wait, querying the database...';
+            userInput.textContent = '';
+            startLatencyTimer();
 
-        try {
-            const initialResponse = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMessage }),
-            });
+            try {
+                const initialResponse = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userMessage }),
+                });
 
-            if (!initialResponse.ok) {
-                throw new Error(`Server error during parsing: ${initialResponse.status}`);
+                if (!initialResponse.ok) {
+                    throw new Error(`Server error during parsing: ${initialResponse.status}`);
+                }
+
+                const data = await initialResponse.json();
+                const searchParams = data.searchParams;
+
+                // --- NEW CALCULATOR LOGIC START ---
+                if (searchParams.calculateServings) {
+                    const desireInput = document.getElementById('calcDesiredServings');
+                    const origInput = document.getElementById('calcOriginalServings');
+                    
+                    if (desireInput && searchParams.desiredServings) {
+                        desireInput.value = searchParams.desiredServings;
+                    }
+                    if (origInput && searchParams.originalServings) {
+                        origInput.value = searchParams.originalServings;
+                    }
+
+                    // Ensure calculator is visible
+                    if (!calculatorVisible) {
+                        toggleCalculatorVisibility();
+                    }
+                }
+                // --- NEW CALCULATOR LOGIC END ---
+
+                const finalResponse = await fetch('/api/get-recipe-details', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ searchParams: searchParams }),
+                });
+
+                if (!finalResponse.ok) {
+                    throw new Error(`Server error during detail fetch: ${finalResponse.status}`);
+                }
+
+                const finalData = await finalResponse.json();
+                const finalReplyText = finalData.reply;
+                const recipeNamesFromServer = Array.isArray(finalData.recipeNames)
+                ? finalData.recipeNames
+                : [];
+
+                const suppressHeaderAndHighlight =
+                (searchParams?.recipeName === 'NONE' && searchParams?.ingredientName === 'NONE');
+
+                if (suppressHeaderAndHighlight) {
+                    setHighlightedRecipeButton(null);
+                    chatbotResponse.textContent = finalReplyText.replace(/^\s*\/\/.*?\/\/\s*\n?/, '').trim();
+                }
+                else {
+                    let recipeName = null;
+                    if (recipeNamesFromServer.length > 0) {
+                        // If multiple or single, pick the first for the "main" focus
+                        recipeName = recipeNamesFromServer[0];
+                    } else {
+                         recipeName = extractRecipeNameFromResponse(finalReplyText);
+                    }
+
+                    // Update Chat UI
+                    if (recipeNamesFromServer.length > 1){
+                         showRecipeButtonsForNames(recipeNamesFromServer);
+                         chatbotResponse.textContent = finalReplyText.replace(/^\s*\/\/.*?\/\/\s*\n?/, '').trim();
+                    } else {
+                        // Single recipe found or inferred
+                        if (recipeName) {
+                            focusRecipeButtonByName(recipeName);
+                            chatbotResponse.innerHTML = finalReplyText.replace(/\/\/(.*?)\/\/\n*/, `<h3>${recipeName}</h3>`).trim();
+                        } else {
+                            chatbotResponse.textContent = finalReplyText.replace(/^\s*\/\/.*?\/\/\s*\n?/, '').trim();
+                        }
+                    }
+
+                    // --- NEW CALCULATOR AUTO-IMPORT LOGIC ---
+                    // If the user asked for calculation AND we successfully focused a recipe
+                    if (searchParams.calculateServings && recipeName) {
+                        // focusRecipeButtonByName triggers the click handler synchronously for the DOM event,
+                        // setting the highlighted button. We can now trigger the import.
+                        // We add a small delay or await to ensure the UI feels responsive, 
+                        // but technically we can call it immediately.
+                        await importIngredientsToCalculator();
+                    }
+                }
+                
+                stopLatencyTimer('Response time: ');
+
+            } catch (error) {
+                console.error('Failed to get chatbot response:', error);
+                chatbotResponse.textContent = `Sorry, I ran into an error. Please try again. Error: ${error.message}`;
+                stopLatencyTimer('Failed after');
             }
-
-            const data = await initialResponse.json();
-            const searchParams = data.searchParams;
-
-            // if (searchParams.recipeName === 'NONE' && searchParams.ingredientName === 'NONE') {
-            //     chatbotResponse.textContent = "I can only help with recipe-related questions. Please ask me about a recipe or an ingredient.";
-            //     stopLatencyTimer('Cancelled:');
-            //     return;
-            // }
-
-            const finalResponse = await fetch('/api/get-recipe-details', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ searchParams: searchParams }),
-            });
-
-            if (!finalResponse.ok) {
-                throw new Error(`Server error during detail fetch: ${finalResponse.status}`);
-            }
-
-            const finalData = await finalResponse.json();
-            const finalReplyText = finalData.reply;
-            const suppressHeaderAndHighlight =
-            (searchParams?.recipeName === 'NONE' && searchParams?.ingredientName === 'NONE');
-
-            if (suppressHeaderAndHighlight) {
-            setHighlightedRecipeButton(null);
-            }
-
-            const recipeName = !suppressHeaderAndHighlight
-            ? extractRecipeNameFromResponse(finalReplyText)
-            : null;
-
-            if (recipeName) {
-            focusRecipeButtonByName(recipeName);
-            chatbotResponse.innerHTML = finalReplyText
-                .replace(/\/\/(.*?)\/\/\n*/, `<h3>${recipeName}</h3>`)
-                .trim();
-            } 
-
-            else {
-            chatbotResponse.textContent = finalReplyText
-                .replace(/^\s*\/\/.*?\/\/\s*\n?/, '')
-                .trim();
-            }
-            stopLatencyTimer('Response time:');
-
-        } catch (error) {
-            console.error('Failed to get chatbot response:', error);
-            chatbotResponse.textContent = `Sorry, I ran into an error. Please try again. Error: ${error.message}`;
-            stopLatencyTimer('Failed after');
         }
-    }
         
     </script>
 </body>

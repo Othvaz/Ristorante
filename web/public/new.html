@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Servings Calculator</title>
+</head>
+<body>
+  <h1>Servings Calculator</h1>
+
+  <div>
+    <label>
+      Recipe yields how many servings?
+      <input type="number" id="recipeYield" value="4" min="1" step="0.1">
+    </label>
+    <br><br>
+    <label>
+      Desired servings:
+      <input type="number" id="desiredServings" value="2" min="1" step="0.1">
+    </label>
+  </div>
+
+  <h2>Ingredients</h2>
+  <table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Ingredient</th>
+        <th>Original Quantity</th>
+        <th>Scaled Quantity</th>
+      </tr>
+    </thead>
+    <tbody id="ingredientsTable">
+      <!-- data-qty is the original quantity number -->
+      <tr data-qty="3" data-unit="tsp">
+        <td>Sugar</td>
+        <td>3 tsp</td>
+        <td class="new-qty"></td>
+      </tr>
+      <tr data-qty="2" data-unit="ml">
+        <td>Vanilla Extract</td>
+        <td>2 ml</td>
+        <td class="new-qty"></td>
+      </tr>
+      <tr data-qty="150" data-unit="g">
+        <td>Flour</td>
+        <td>150 g</td>
+        <td class="new-qty"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    const recipeYieldInput = document.getElementById("recipeYield");
+    const desiredServingsInput = document.getElementById("desiredServings");
+    const rows = document.querySelectorAll("#ingredientsTable tr");
+
+    function updateScaledQuantities() {
+      const recipeYield = parseFloat(recipeYieldInput.value);
+      const desiredServings = parseFloat(desiredServingsInput.value);
+
+      rows.forEach(row => {
+        const originalQty = parseFloat(row.dataset.qty);
+        const unit = row.dataset.unit;
+        const cell = row.querySelector(".new-qty");
+
+        // If inputs are invalid or zero, show blank
+        if (!recipeYield || recipeYield === 0 || !desiredServings) {
+          cell.textContent = "";
+          return;
+        }
+
+        // Same logic as your Excel:
+        // (originalQty / recipeYield) * desiredServings
+        const newQty = (originalQty / recipeYield) * desiredServings;
+
+        cell.textContent = newQty.toFixed(2) + " " + unit;
+      });
+    }
+
+    // Update when inputs change
+    recipeYieldInput.addEventListener("input", updateScaledQuantities);
+    desiredServingsInput.addEventListener("input", updateScaledQuantities);
+
+    // Initial calculation
+    updateScaledQuantities();
+  </script>
+</body>
+</html>
