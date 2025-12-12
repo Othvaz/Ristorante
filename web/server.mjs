@@ -351,7 +351,7 @@ app.post("/api/chat", async (req, res) => {
         
         Do not add any other text. Strictly output only the JSON object.`;
 
-        const model = "qwen3:4b";
+        const model = "qwen3:4b-instruct-2507-q4_K_M";
 
         const chatbotReply = await chatter(model, systemPrompt, message, 0.2, true);
         
