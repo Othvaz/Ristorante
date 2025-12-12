@@ -355,9 +355,7 @@ app.post("/api/chat", async (req, res) => {
 
         const chatbotReply = await chatter(model, systemPrompt, message, 0.2, true);
         
-        const cleanedReply = chatbotReply.replace(/```json/g, "").replace(/```/g, "").trim();
-
-        const parsedData = JSON.parse(cleanedReply);
+        const parsedData = JSON.parse(chatbotReply);
 
         res.json({ searchParams: parsedData });
 
@@ -409,7 +407,7 @@ app.post("/api/get-recipe-details", async (req, res) => {
 
         Based on the information above, provide a comprehensive and helpful response to the user's latest message. If the database found results, present them clearly. If no results were found, inform the user politely. If the user asked for no instructions, confirm that you have omitted them.`;
 
-        const model = "mistralai/ministral-3-3b"; 
+        const model = "qwen/qwen3-4b-2507"; 
         const lastUserMessage = conversationHistory.findLast(m => m.role === 'user')?.content || "";
         const naturalReply = await chatter(model, finalSystemPrompt, lastUserMessage, 0.5);
         const formattedReply = `//${recipeNameReal}//\n\n${naturalReply}`;
