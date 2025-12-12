@@ -59,7 +59,7 @@ async function chatter(model, systemText, userText, temperature = 0.2, jsonMode 
     // if (jsonMode) body.response_format = { type: "json_object" };    
     if (maxTokens) body.max_tokens = maxTokens;
 
-    const response = await fetch(`http://127.0.0.1:1234/v1/chat/completions`, {
+    const response = await fetch(`http://127.0.0.1:11434/v1/chat/completions`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
@@ -407,7 +407,7 @@ app.post("/api/get-recipe-details", async (req, res) => {
 
         Based on the information above, provide a comprehensive and helpful response to the user's latest message. If the database found results, present them clearly. If no results were found, inform the user politely. If the user asked for no instructions, confirm that you have omitted them.`;
 
-        const model = "qwen/qwen3-4b-2507"; 
+        const model = "qwen3:4b-instruct-2507-q4_K_M"; 
         const lastUserMessage = conversationHistory.findLast(m => m.role === 'user')?.content || "";
         const naturalReply = await chatter(model, finalSystemPrompt, lastUserMessage, 0.5);
         const formattedReply = `//${recipeNameReal}//\n\n${naturalReply}`;
